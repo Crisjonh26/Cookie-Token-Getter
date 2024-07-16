@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <title>Cookie And Token Getter</title>
+    <style>
+      * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+html{
+  scroll-behavior: smooth;
+}
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    flex-direction: column;
+    background: #0c1022;
+}
+h3{
+  color: #0ef;
+  font-size: 27px;
+  font-weight: 24px;
+  text-align: center;
+  text-shadow: 0 0 10px #0ef;
+}
+.input-group {
+    position: relative;
+    margin: 20px 0;
+}
+.input-group label {
+    position: absolute;
+    top: 40%;
+    left: 14px;
+    transform: translateY(-50%);
+    font-size: 16px;
+    color: #0ef;
+    padding: 0 5px;
+    pointer-events: none;
+    transition: .5s;
+}
+.input-group input {
+    width: 330px;
+    height: 60px;
+    font-size: 16px;
+    color: #fff;
+    padding: 0 15px;
+    background: transparent;
+    border: 1.2px solid #00ff00;
+    outline: none;
+    border-radius: 5px;
+}
+.input-group .u{
+  width: 50%;
+  height: 45px;
+  padding: 0 5px;
+  border: 1.2px solid #00ff00;
+  background: transparent;
+  font-size: 18px;
+  outline: none;
+  border-radius: 5px;
+  color: #0ef;
+  margin-left: 25%;
+  margin-right: 20%;
+}
+.input-group input:hover{
+  border: 1.2px solid #ff0000;
+}
+.input-group input:focus~label,
+.input-group input:valid~label {
+    top: 0;
+    font-size: 14px;
+    background: #0c1022;
+}
+.result{
+  margin-top: 20px;
+  border: 1px solid #444;
+  padding: 15px;
+  background-color: #2c2c2c;
+  border-radius: 5px;
+}
+.success{
+  color: #00ff00;
+  margin-top: 10px;
+}
+.error{
+  color: #ff0000;
+  margin-top: 10px;
+}
+.copy-button{
+  border: 1px solid #ccc;
+  background: #466fb3;
+  width: 80%;
+  height: 50px;
+  text-align: center;
+  color: #46b3ab;
+  text-shadow: 0 0 1rem #97fcf6;
+}
+@keyframes fadeIn{
+  from{
+    opacity: 0;
+  }
+  to{
+    opacity: 1;
+  }
+}
+@media{
+  body{
+    width: 100%;
+    height: 100%;
+  }
+}
+    </style>
+  </head>
+<body>
+  <div class="container">
+      <div class="input-group">
+    <h3>Cookie And Token Getter</h3>
+  </div>
+  <form id="Oh">
+        <div class="input-group">
+        <input type="text" id="username" required>
+        <label for="">USERNAME ID NUMBER</label>
+    </div>
+    <div class="input-group">
+      <input type="password" id="password" required>
+      <label for="">PASSWORD</label>
+    </div>
+    <div class="input-group">
+      <button class="u" type="submit">SUBMIT</button>
+      <div class="result" id="result">
+        
+      </div>
+    </div>
+  </form>
+  </div>
+      <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script>
+    document.getElementById('Oh').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const chilli = document.getElementById('username').value;
+            const pogi = document.getElementById('password').value;
+            const hot = document.getElementById('result');
+            hot.innerHTML = '<p class="animate__animated animate__flash">Getting token and cookie, please wait...</p>';
+
+            try {
+                const response = await axios.get(`https://markdevs69-1efde24ed4ea.herokuapp.com/api/token&cookie?username=${chilli}&password=${pogi}`);
+                const bingchilling = response.data.data.access_token_eaad6v7;
+                const token2 = response.data.data.access_token;
+                const cookie = response.data.data.cookies;
+
+                hot.innerHTML = `
+                    <div class="animate__animated animate__fadeIn">
+                        <p><strong>EAAD6V7 TOKEN</strong></p>
+                        <p id="bingchilling">${bingchilling}</p>
+                        <button class="copy-button"
+                    onclick="copyToClipboard('bingchilling')">Copy EAAD6V7 Token</button>
+                    </div>
+                    <div class="animate__animated animate__fadeIn">
+                        <p><strong>EAAAAU TOKEN</strong></p>
+                        <p id="token2">${token2}</p>
+                        <button class="copy-button" onclick="copyToClipboard('token2')">Copy EAAAAU Token</button>
+                    </div>
+                    <div class="animate__animated animate__fadeIn">
+                        <p><strong>COOKIE 🍪</strong></p>
+                        <p id="cookie">${cookie}</p>
+                        <button class="copy-button" onclick="copyToClipboard('cookie')">Copy Cookie</button>
+                    </div>
+                `;
+            } catch (error) {
+                console.error(error);
+                hot.innerHTML = '<p class="error">An error occurred while getting the token</p>';
+            }
+        });
+
+        function copyToClipboard(elementId) {
+            const text = document.getElementById(elementId).innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Copied to clipboard!',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+  </script>
+</body>
+</html>
